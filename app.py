@@ -24,13 +24,20 @@ if uploaded_file is not None:
     keyword = st.text_input(f"พิมพ์ข้อความที่ต้องการค้นหาในคอลัมน์ {filter_col}")
 
     if st.button("ประมวลผลข้อมูล"):
-        # กรองข้อมูล
-        new_df = df[selected_columns]
-        if keyword:
-            new_df = new_df[new_df[filter_col].astype(str).contains(keyword, na=False)]
-        
-        st.write("ข้อมูลใหม่ที่ได้:", new_df)
+            # กรองข้อมูลจากตารางหลัก (df) ก่อน
+            filtered_df = df.copy()
+            if keyword:
+                # แก้ไขโดยเติม .str. เข้าไป
+                filtered_df = filtered_df[filtered_df[filter_col].astype(str).str.contains(keyword, na=False)]
+            
+            # หลังจากกรองเสร็จ ค่อยตัดคอลัมน์ตามที่ผู้ใช้เลือก
+            new_df = filtered_df[selected_columns]
+            
+            st.write("ข้อมูลใหม่ที่ได้:", new_df)
 
+            # 4. ปุ่มดาวน์โหลด
+            csv = new_df.to_csv(index=False).encode('utf-8')
+            st.download_button("ดาวน์โหลดไฟล์ใหม่ (CSV)", csv, "filtered_data.csv", "text/csv")
         # 4. ปุ่มดาวน์โหลด
         csv = new_df.to_csv(index=False).encode('utf-8')
         st.download_button("ดาวน์โหลดไฟล์ใหม่ (CSV)", csv, "filtered_data.csv", "text/csv")
