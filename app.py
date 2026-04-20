@@ -38,6 +38,3 @@ if uploaded_file is not None:
             # 4. ปุ่มดาวน์โหลด
             csv = new_df.to_csv(index=False).encode('utf-8')
             st.download_button("ดาวน์โหลดไฟล์ใหม่ (CSV)", csv, "filtered_data.csv", "text/csv")
-        # 4. ปุ่มดาวน์โหลด
-        csv = new_df.to_csv(index=False).encode('utf-8')
-        st.download_button("ดาวน์โหลดไฟล์ใหม่ (CSV)", csv, "filtered_data.csv", "text/csv")
