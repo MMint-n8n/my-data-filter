@@ -38,7 +38,7 @@ if uploaded_file is not None:
                 return data_a.iloc[:, idx] if idx < data_a.shape[1] else ""
 
             # 2. สร้างเมนูแบบแท็บ (Tabs)
-            tab1, tab2 = st.tabs(["📄 ฟอร์แมตไฟล์ ข (OMS)", "📄 ฟอร์แมตไฟล์ ค (Commodity Set)"])
+            tab1, tab2 = st.tabs(["📄 ฟอร์แมตไฟล์ OMS (Packเดี่ยว)", "📄 ฟอร์แมตไฟล์ OMS (Pack2&ยกลัง)"])
             
             # --- ส่วนของแท็บที่ 1 (ไฟล์ ข เดิม) ---
             with tab1:
