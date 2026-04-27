@@ -95,9 +95,6 @@ if uploaded_file is not None:
                 df_c1["PictureURL"] = safe_get_col('BV')
                 df_c1 = df_c1.fillna("")
 
-                # -------------------------------------------------------------
-                # 🛠️ จุดที่แก้ไข: แยกชื่อ Column สำหรับ Preview กับสำหรับลง Excel จริง
-                # -------------------------------------------------------------
                 # ชื่อ Column แบบไม่ซ้ำกัน เพื่อให้ Streamlit พรีวิวได้ไม่พัง
                 columns_sheet2_preview = [
                     "Goods barcode (1)", "Goods name (1)", "specification", 
@@ -110,7 +107,7 @@ if uploaded_file is not None:
                     "Goods barcode", "Goods name", "Specification&model", "Set quantity"
                 ]
 
-                # โหลดข้อมูลใส่ DataFrame แบบ Preview ไปก่อน
+                # โหลดข้อมูลใส่ DataFrame แบบ Preview
                 df_c2 = pd.DataFrame(columns=columns_sheet2_preview, index=data_a.index)
                 df_c2.iloc[:, 0] = safe_get_col('AT') # Column A
                 df_c2.iloc[:, 1] = safe_get_col('R')  # Column B
@@ -137,7 +134,7 @@ if uploaded_file is not None:
                     worksheet.merge_range('A1:C1', 'Commodity set information', header_format)
                     worksheet.merge_range('D1:G1', 'Set details information', header_format)
 
-                    # --- แถวที่ 2: ใช้ชื่อ Column ของจริง (ที่ซ้ำกันได้) โยนลง Excel ---
+                    # --- แถวที่ 2: ใช้ชื่อ Column ของจริง ---
                     for col_num, value in enumerate(columns_sheet2_excel):
                         worksheet.write(1, col_num, value, header_format)
 
@@ -147,9 +144,15 @@ if uploaded_file is not None:
                             worksheet.write(row_num + 2, col_num, cell_value)
 
                 st.success("✅ สร้างไฟล์ ค พร้อม 2 Sheet และรวมหัวตารางสำเร็จ!")
+                
+                # --- พรีวิวตาราง ---
+                st.write("ตัวอย่าง Sheet 1 (Commodity set):")
+                st.dataframe(df_c1.head(10))
+                
                 st.write("ตัวอย่าง Sheet 2 (Set details):")
-                st.dataframe(df_c2.head(10)) # คราวนี้ Preview ได้แล้ว!
+                st.dataframe(df_c2.head(10)) 
 
+                # --- ปุ่มดาวน์โหลด ---
                 st.download_button(
                     label="📥 ดาวน์โหลดไฟล์ Excel ค (2 Sheets)",
                     data=buffer_c.getvalue(),
