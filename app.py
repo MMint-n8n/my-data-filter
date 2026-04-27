@@ -73,7 +73,7 @@ if uploaded_file is not None:
                     df_b.to_excel(writer, index=False, sheet_name='Data')
                 
                 st.download_button(
-                    label="📥 ดาวน์โหลดไฟล์ Excel ข (OMS)",
+                    label="📥 ดาวน์โหลดไฟล์ Excel OMS (Packเดี่ยว)",
                     data=buffer_b.getvalue(),
                     file_name="File_B_OMS.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -154,7 +154,7 @@ if uploaded_file is not None:
 
                 # --- ปุ่มดาวน์โหลด ---
                 st.download_button(
-                    label="📥 ดาวน์โหลดไฟล์ Excel ค (2 Sheets)",
+                    label="📥 ดาวน์โหลดไฟล์ Excel OMS (Pack2&ยกลัง)",
                     data=buffer_c.getvalue(),
                     file_name="File_C_CommoditySet.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
