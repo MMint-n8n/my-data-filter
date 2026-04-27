@@ -80,7 +80,7 @@ if uploaded_file is not None:
                 df_b.to_excel(writer, index=False, sheet_name='Data')
                 
             st.download_button(
-                label="📥 ดาวน์โหลดไฟล์ Excel ข",
+                label="📥 ดาวน์โหลดไฟล์ Excel OMS",
                 data=buffer.getvalue(),
                 file_name="Formatted_Data.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
