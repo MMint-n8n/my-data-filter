@@ -95,27 +95,36 @@ if uploaded_file is not None:
                 df_c1["PictureURL"] = safe_get_col('BV')
                 df_c1 = df_c1.fillna("")
 
-                # เตรียมข้อมูล Sheet 2: Set details (Mapping AT -> A, R -> B)
-                columns_sheet2 = [
+                # -------------------------------------------------------------
+                # 🛠️ จุดที่แก้ไข: แยกชื่อ Column สำหรับ Preview กับสำหรับลง Excel จริง
+                # -------------------------------------------------------------
+                # ชื่อ Column แบบไม่ซ้ำกัน เพื่อให้ Streamlit พรีวิวได้ไม่พัง
+                columns_sheet2_preview = [
+                    "Goods barcode (1)", "Goods name (1)", "specification", 
+                    "Goods barcode (2)", "Goods name (2)", "Specification&model", "Set quantity"
+                ]
+                
+                # ชื่อ Column แบบซ้ำกัน (ของจริง) ที่จะเอาไปเขียนลงไฟล์ Excel
+                columns_sheet2_excel = [
                     "Goods barcode", "Goods name", "specification", 
                     "Goods barcode", "Goods name", "Specification&model", "Set quantity"
                 ]
-                df_c2 = pd.DataFrame(columns=columns_sheet2, index=data_a.index)
+
+                # โหลดข้อมูลใส่ DataFrame แบบ Preview ไปก่อน
+                df_c2 = pd.DataFrame(columns=columns_sheet2_preview, index=data_a.index)
                 df_c2.iloc[:, 0] = safe_get_col('AT') # Column A
                 df_c2.iloc[:, 1] = safe_get_col('R')  # Column B
                 df_c2 = df_c2.fillna("")
 
                 buffer_c = io.BytesIO()
-                # ใช้ xlsxwriter เพื่อจัดการ Merged Cells
                 with pd.ExcelWriter(buffer_c, engine='xlsxwriter') as writer:
                     # เขียน Sheet 1
                     df_c1.to_excel(writer, index=False, sheet_name='Commodity set')
 
-                    # เขียน Sheet 2 พร้อมการจัดรูปแบบพิเศษ
+                    # เขียน Sheet 2
                     workbook = writer.book
                     worksheet = workbook.add_worksheet('Set details')
                     
-                    # รูปแบบหัวตาราง
                     header_format = workbook.add_format({
                         'bold': True,
                         'align': 'center',
@@ -128,8 +137,8 @@ if uploaded_file is not None:
                     worksheet.merge_range('A1:C1', 'Commodity set information', header_format)
                     worksheet.merge_range('D1:G1', 'Set details information', header_format)
 
-                    # --- แถวที่ 2: ชื่อ Column ปกติ ---
-                    for col_num, value in enumerate(columns_sheet2):
+                    # --- แถวที่ 2: ใช้ชื่อ Column ของจริง (ที่ซ้ำกันได้) โยนลง Excel ---
+                    for col_num, value in enumerate(columns_sheet2_excel):
                         worksheet.write(1, col_num, value, header_format)
 
                     # --- ข้อมูลแถวที่ 3 เป็นต้นไป ---
@@ -139,7 +148,7 @@ if uploaded_file is not None:
 
                 st.success("✅ สร้างไฟล์ ค พร้อม 2 Sheet และรวมหัวตารางสำเร็จ!")
                 st.write("ตัวอย่าง Sheet 2 (Set details):")
-                st.dataframe(df_c2.head(10))
+                st.dataframe(df_c2.head(10)) # คราวนี้ Preview ได้แล้ว!
 
                 st.download_button(
                     label="📥 ดาวน์โหลดไฟล์ Excel ค (2 Sheets)",
